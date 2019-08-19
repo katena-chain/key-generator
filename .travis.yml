@@ -1,0 +1,7 @@
+language: minimal
+
+services:
+  - docker
+
+script:
+  - docker run -e GITHUB_TOKEN=${GITHUB_TOKEN} -v ${PWD}:/app/key-generator transchain/golang-crosscompile:v1.0.0 goreleaser

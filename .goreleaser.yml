@@ -1,0 +1,111 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+project_name: key-generator
+
+dist: build/goreleaser
+
+before:
+  hooks:
+    # you may remove this if you don't use vgo
+    - go mod download
+    # you may remove this if you don't need go generate
+    - go generate ./...
+    #- fyne-cross --targets=linux/amd64,windows/amd64,darwin/amd64 --output=key-generator-gui gui/main.go
+
+builds:
+    -
+     id: "cli-build"
+     main: ./cmd/main.go
+     binary: key-generator-cli
+     ldflags:
+       - -s -w -X github.com/katena-chain/key-generator/version.version={{.Tag}} -X github.com/katena-chain/key-generator/version.gitCommit={{.Commit}}
+     env:
+      - CGO_ENABLED=0
+     goos:
+      - windows
+      - linux
+      - darwin
+     goarch:
+      - amd64
+
+    - id: "gui-build_windows"
+      main: ./gui/main.go
+      binary: key-generator-gui
+      env:
+        - CGO_ENABLED=1
+        - FYNE_THEME=light
+        - CC=x86_64-w64-mingw32-gcc
+        - CCX=x86_64-w64-mingw32-g++
+      goos:
+        - windows
+      goarch:
+        - amd64
+
+    - id: "gui-build_linux"
+      main: ./gui/main.go
+      binary: key-generator-gui
+      env:
+        - CGO_ENABLED=1
+        - FYNE_THEME=light
+        - CC=gcc
+        - CCX=gxx
+      goos:
+        - linux
+      goarch:
+        - amd64
+
+    - id: "gui-build_darwin"
+      main: ./gui/main.go
+      binary: key-generator-gui
+      env:
+        - CGO_ENABLED=1
+        - FYNE_THEME=light
+        - CC=o32-clang
+      goos:
+        - darwin
+      goarch:
+        - amd64
+
+archives:
+
+    -
+     id: key-cli-generator_archive
+     builds:
+      - cli-build
+     name_template: "cli_{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+     replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+     format: binary
+     format_overrides:
+      - goos: windows
+        format: zip
+
+    -
+     id: key-gui-generator_archive
+     builds:
+      - gui-build_windows
+      - gui-build_linux
+      - gui-build_darwin
+     name_template: "gui_{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+     replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+     format: binary
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
