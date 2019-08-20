@@ -33,7 +33,6 @@ builds:
       binary: key-generator-gui
       env:
         - CGO_ENABLED=1
-        - FYNE_THEME=light
         - CC=x86_64-w64-mingw32-gcc
         - CCX=x86_64-w64-mingw32-g++
       goos:
@@ -46,7 +45,6 @@ builds:
       binary: key-generator-gui
       env:
         - CGO_ENABLED=1
-        - FYNE_THEME=light
         - CC=gcc
         - CCX=gxx
       goos:
@@ -59,7 +57,6 @@ builds:
       binary: key-generator-gui
       env:
         - CGO_ENABLED=1
-        - FYNE_THEME=light
         - CC=o32-clang
       goos:
         - darwin

@@ -6,6 +6,7 @@ import (
 
     "fyne.io/fyne"
     "fyne.io/fyne/app"
+    "fyne.io/fyne/theme"
     "fyne.io/fyne/widget"
     "github.com/gen2brain/dlgs"
 
@@ -20,6 +21,7 @@ func main() {
 func RunStartGui() {
 
     appl := app.New()
+    appl.Settings().SetTheme(theme.LightTheme())
     window := appl.NewWindow("Key generator")
     icon, err := assets.Asset("../assets/logo-katena.png")
     if err != nil {
