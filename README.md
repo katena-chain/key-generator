@@ -1,5 +1,7 @@
 # Key-generator
 
+[![Build Status](https://travis-ci.org/katena-chain/key-generator.svg?branch=master)](https://travis-ci.org/katena-chain/key-generator)
+
 ## Requirements
 
 This project uses [golang](https://golang.org/).
