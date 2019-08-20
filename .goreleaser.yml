@@ -6,11 +6,8 @@ dist: build/goreleaser
 
 before:
   hooks:
-    # you may remove this if you don't use vgo
     - go mod download
-    # you may remove this if you don't need go generate
     - go generate ./...
-    #- fyne-cross --targets=linux/amd64,windows/amd64,darwin/amd64 --output=key-generator-gui gui/main.go
 
 builds:
     -
@@ -64,7 +61,6 @@ builds:
         - amd64
 
 archives:
-
     -
      id: key-cli-generator_archive
      builds:
@@ -77,10 +73,6 @@ archives:
       386: i386
       amd64: x86_64
      format: binary
-     format_overrides:
-      - goos: windows
-        format: zip
-
     -
      id: key-gui-generator_archive
      builds:
