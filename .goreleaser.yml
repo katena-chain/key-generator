@@ -15,7 +15,7 @@ builds:
      main: ./cmd/main.go
      binary: key-generator-cli
      ldflags:
-       - -s -w -X github.com/katena-chain/key-generator/version.version={{.Tag}} -X github.com/katena-chain/key-generator/version.gitCommit={{.Commit}}
+       - -s -w -X github.com/katena-chain/key-generator/version.Version={{.Tag}} -X github.com/katena-chain/key-generator/version.GitCommit={{.Commit}}
      env:
       - CGO_ENABLED=0
      goos:

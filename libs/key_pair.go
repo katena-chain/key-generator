@@ -3,12 +3,13 @@ package libs
 import (
     "crypto/rand"
     "encoding/base64"
-    "errors"
     "fmt"
     "os"
+    "syscall"
 
-    "github.com/riobard/go-x25519"
+    tcOs "github.com/transchain/go-common/os"
     "golang.org/x/crypto/ed25519"
+    "golang.org/x/crypto/nacl/box"
 )
 
 type KeyPair struct {
@@ -17,27 +18,29 @@ type KeyPair struct {
 }
 
 func (kp *KeyPair) Show() {
-    fmt.Println("Public key :", kp.PubKey)
-    fmt.Println("Private key :", kp.PrivKey)
+    fmt.Println(fmt.Sprintf("Public key: %s", kp.PubKey))
+    fmt.Println(fmt.Sprintf("Private key: %s", kp.PrivKey))
 }
 
 func (kp *KeyPair) Save(filepath string) error {
 
-    file, err := os.Create(filepath)
-
+    err := tcOs.EnsureFileDir(filepath, tcOs.DefaultDirPerm)
     if err != nil {
-        return errors.New("couldn't write to the file" + err.Error())
+        return err
     }
 
+    file, err := os.OpenFile(filepath, syscall.O_CREAT|syscall.O_WRONLY, tcOs.DefaultFilePerm)
     defer func() {
         _ = file.Close()
     }()
+    if err != nil {
+        return err
+    }
 
     _, err = file.WriteString(fmt.Sprintf("Public key : %s \nPrivate key : %s \n", kp.PubKey, kp.PrivKey))
     if err != nil {
         return err
     }
-    fmt.Println("Keys saved to :", filepath)
 
     return nil
 }
@@ -45,15 +48,14 @@ func (kp *KeyPair) Save(filepath string) error {
 func GenerateX25519() (KeyPair, error) {
     // Generates an X25519 keypair
 
-    secretKey, err := x25519.GenerateKey(rand.Reader)
-
+    publicKey, privateKey, err := box.GenerateKey(rand.Reader)
     if err != nil {
         return KeyPair{}, err
     }
 
     keys := KeyPair{
-        PubKey:  base64.StdEncoding.EncodeToString(secretKey.Public()),
-        PrivKey: base64.StdEncoding.EncodeToString(secretKey.Bytes()),
+        PubKey:  base64.StdEncoding.EncodeToString(publicKey[:]),
+        PrivKey: base64.StdEncoding.EncodeToString(privateKey[:]),
     }
 
     return keys, nil
@@ -63,7 +65,6 @@ func GenerateEd25519() (KeyPair, error) {
     // Generates an ED25519 keypair
 
     pubKey, privKey, err := ed25519.GenerateKey(rand.Reader)
-
     if err != nil {
         return KeyPair{}, err
     }

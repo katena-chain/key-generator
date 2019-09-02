@@ -1,9 +1,8 @@
 package commands
 
 import (
+    "errors"
     "fmt"
-
-    "github.com/spf13/viper"
 
     "github.com/katena-chain/key-generator/libs"
 
@@ -26,18 +25,19 @@ func GetGenED25519KeysRunEFn() func(*cobra.Command, []string) error {
 
         keys, err := libs.GenerateEd25519()
         if err != nil {
-            return err
+            return errors.New(fmt.Sprintf("unable to generate the keys: %s", err.Error()))
         }
 
         keys.Show()
 
-        savePath := viper.GetString("save")
+        savePath, _ := cmd.Flags().GetString(SaveFlag)
         // => Value is "" if no flag has been used
         if savePath != "" {
             err = keys.Save(savePath) // => flag parameter : path to the file
             if err != nil {
-                fmt.Println("error while saving keys to a file :", err.Error())
+                return errors.New(fmt.Sprintf("unable to save the keys file: %s", err.Error()))
             }
+            fmt.Println(fmt.Sprintf("Keys saved to: %s", savePath))
         }
 
         return nil
