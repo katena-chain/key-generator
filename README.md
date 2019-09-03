@@ -2,65 +2,44 @@
 
 [![Build Status](https://travis-ci.org/katena-chain/key-generator.svg?branch=master)](https://travis-ci.org/katena-chain/key-generator)
 
-## Requirements
-
-This project uses [golang](https://golang.org/).
-
-**To compile on Ubuntu/Debian, you may need to install the ```libgl1-mesa-dev``` and ```xorg-dev``` packages, and have GCC installed.**
-
-
-### Tested versions
+## Development requirements (Linux)
 
 In order to run the project properly, some tools are required:
 
 - [golang](https://golang.org/) (Tested: v1.12.6)
+- xorg-dev (gui requirement)
+- libgl1-mesa-dev (gui requirement)
 
-## Installation
+## Build GUI (Linux)
 
-Refer to the cross-compiling section below.
-
-## Using the tool
-
-For the GUI :
-
-Install go-bindata:
-
+Install go-bindata: 
 ```bash
 go get -u github.com/go-bindata/go-bindata
 ```
 
 Generate assets:
-
 ```bash
 go generate gui/main.go
 ```
 
+Build the project:
 ```bash
-build/key-generator-gui-[linux-amd64] //[replace with your OS]
+CGO_ENABLED=1 go build -o build/local/gui_key-generator_Linux_x86_64 ./gui
 ```
 
-For the CLI :
+## Build CLI (Linux)
+
+Build the project:
 ```bash
-build/goreleaser/cli-build_[linux_amd64]/key-generator-cli //[replace with your OS]
+go build -o build/local/cli_key-generator_Linux_x86_64 ./cli
 ```
 
-### Commands
+## Cross-compiling
 
-| **Command** | **Usage** | **Possible flag** | **Example** | 
-|--|--|--|--|
-**gen-ed** | *Generates an ED25519 key pair.* | ```--save filePath``` to save the keys to a given file | ```bash build/key-generator genEd --save ~/filePath```|
-|**gen-x** | *Generates an ED25519 key pair.* | ```--save filePath``` to save the keys to a given file | ```bash build/key-generator genX --save ~/filePath```|
-
-
-## Releases
-
-You'll find the release binaries under the ``build`` folder. Run it like the above using the path corresponding path.
-
-### Cross-compiling
-
-To cross-compile  for Windows and MacOS, build the Dockerfile and use the corresponding image.
-
-For example, from the root, run :
+To cross-compile for Windows and MacOS, you can use our docker image to build the project for different platforms:
 ```bash
 docker run -v ${PWD}:/app transchain/golang-crosscompile:v1.0.0 goreleaser --rm-dist --skip-publish --snapshot
 ```
+
+This command will create a build/goreleaser folder containing all the binaries.
+> Note: the docker image will create the build/goreleaser folder with root permissions
