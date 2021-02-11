@@ -10,17 +10,17 @@ In order to run the project properly, some tools are required:
 - xorg-dev (gui requirement)
 - libgl1-mesa-dev (gui requirement)
 
-## Build GUI (Linux)
-
 Install go-bindata: 
 ```bash
-go get -u github.com/go-bindata/go-bindata
+go get -u github.com/go-bindata/go-bindata/...
 ```
 
 Generate assets:
 ```bash
 go generate gui/main.go
 ```
+
+## Build GUI (Linux) DEPRECATED
 
 Build the project:
 ```bash
@@ -34,7 +34,7 @@ Build the project:
 go build -o build/local/cli_key-generator_Linux_x86_64 ./cli
 ```
 
-## Cross-compiling
+## Cross-compiling DEPRECATED
 
 To cross-compile for Windows and MacOS, you can use our docker image to build the project for different platforms:
 ```bash

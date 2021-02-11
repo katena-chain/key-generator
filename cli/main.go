@@ -4,7 +4,7 @@ import (
     "github.com/katena-chain/key-generator/cli/commands"
     "github.com/katena-chain/key-generator/version"
 
-    tcCliCommands "github.com/transchain/go-common/cli/commands"
+    tcCliCommands "github.com/transchain/sdk-go/cli/commands"
 )
 
 func main() {

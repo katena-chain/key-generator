@@ -7,7 +7,7 @@ import (
     "os"
     "syscall"
 
-    tcOs "github.com/transchain/go-common/os"
+    tcOs "github.com/transchain/sdk-go/os"
     "golang.org/x/crypto/ed25519"
     "golang.org/x/crypto/nacl/box"
 )
